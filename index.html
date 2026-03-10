@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio System</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080c10;
+      --surface: #0d1318;
+      --border: #1a2530;
+      --accent: #00d4aa;
+      --accent2: #0088ff;
+      --text: #c8d8e8;
+      --muted: #4a6070;
+      --dim: #1e2e3e;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      background: rgba(8,12,16,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .logo span { color: var(--muted); }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      margin-left: 24px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 100px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,212,170,0.3);
+      padding: 4px 10px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 600;
+      line-height: 1.15;
+      color: #e8f4ff;
+      margin-bottom: 20px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 .accent { color: var(--accent); }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .badge {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .badge.hi { border-color: rgba(0,212,170,0.4); color: var(--accent); background: rgba(0,212,170,0.05); }
+
+    /* ── SLEEVES ── */
+    .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+    .section-label::before { content: '// '; color: var(--muted); }
+
+    .sleeves {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .sleeve {
+      background: var(--surface);
+      padding: 28px;
+      transition: background 0.2s;
+    }
+    .sleeve:hover { background: var(--dim); }
+    .sleeve-num {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+    .sleeve-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #e8f4ff;
+      margin-bottom: 8px;
+    }
+    .sleeve-desc {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    .sleeve-bar {
+      height: 2px;
+      background: var(--border);
+      margin-top: 20px;
+    }
+    .sleeve-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    /* ── TICKERS ── */
+    .ticker-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .ticker-table th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ticker-table td {
+      padding: 10px 12px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(26,37,48,0.5);
+      transition: background 0.15s;
+    }
+    .ticker-table tr:hover td { background: var(--dim); }
+    .ticker-sym { color: var(--accent); font-weight: 500; }
+    .sleeve-tag {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      padding: 2px 7px;
+      text-transform: uppercase;
+    }
+    .sleeve-tag.core   { background: rgba(0,212,170,0.08); color: var(--accent); border: 1px solid rgba(0,212,170,0.2); }
+    .sleeve-tag.factor { background: rgba(0,136,255,0.08); color: var(--accent2); border: 1px solid rgba(0,136,255,0.2); }
+    .sleeve-tag.carry  { background: rgba(180,100,255,0.08); color: #b464ff; border: 1px solid rgba(180,100,255,0.2); }
+
+    /* ── SIGNALS ── */
+    .signals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .signal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .signal-card:hover { border-color: rgba(0,212,170,0.3); }
+    .signal-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #e8f4ff;
+      margin-bottom: 6px;
+    }
+    .signal-freq {
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .signal-method {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--sans);
+    }
+
+    /* ── SETUP ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    .step:last-child { border-bottom: 1px solid var(--border); }
+    .step-num {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .step-body { padding: 16px 20px; }
+    .step-title {
+      font-size: 12px;
+      color: #e8f4ff;
+      margin-bottom: 4px;
+    }
+    .step-cmd {
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,212,170,0.05);
+      padding: 6px 10px;
+      margin-top: 8px;
+      border-left: 2px solid var(--accent);
+    }
+
+    /* ── NEXT STEPS ── */
+    .next-items { display: flex; flex-direction: column; gap: 8px; }
+    .next-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .next-item::before {
+      content: '[ ]';
+      color: var(--border);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-text { font-size: 11px; color: var(--muted); }
+    .footer-text span { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .sleeves, .signals { grid-template-columns: 1fr; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">Portfolio<span>.</span>sys</div>
+    <nav>
+      <a href="#sleeves">Sleeves</a>
+      <a href="#tickers">Tickers</a>
+      <a href="#signals">Signals</a>
+      <a href="#setup">Setup</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="tag">AQR 2026 CMA-Based</div>
+      <h1>Signal-driven<br/><span class="accent">portfolio system</span></h1>
+      <p class="hero-sub">Three-sleeve architecture — Core Beta, Multifactor, and Carry — optimized to maximum Sharpe and levered to market volatility with weekly signal overlay.</p>
+      <div class="badges">
+        <span class="badge hi">Max Sharpe</span>
+        <span class="badge hi">Weekly Rebalance</span>
+        <span class="badge">VIX Regime Detection</span>
+        <span class="badge">SQLite Store</span>
+        <span class="badge">Streamlit Dashboard</span>
+        <span class="badge">FRED Macro Data</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="sleeves">
+    <div class="wrap">
+      <div class="section-label">Architecture</div>
+      <div class="sleeves">
+        <div class="sleeve">
+          <div class="sleeve-num">01</div>
+          <div class="sleeve-name">Core Beta</div>
+          <div class="sleeve-desc">Broad market exposure across equities, rates, credit, and inflation protection via liquid ETFs.</div>
+          <div class="sleeve-bar"><div class="sleeve-bar-fill" style="width:55%"></div></div>
+        </div>
+        <div class="sleeve">
+          <div class="sleeve-num">02</div>
+          <div class="sleeve-name">Multifactor</div>
+          <div class="sleeve-desc">Momentum, quality, and managed futures overlays — AQR-style factor premia harvesting.</div>
+          <div class="sleeve-bar"><div class="sleeve-bar-fill" style="width:70%"></div></div>
+        </div>
+        <div class="sleeve">
+          <div class="sleeve-num">03</div>
+          <div class="sleeve-name">Carry</div>
+          <div class="sleeve-desc">FX G10 carry and commodity roll yield capture via DBV and PDBC, with HYG credit spread.</div>
+          <div class="sleeve-bar"><div class="sleeve-bar-fill" style="width:40%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tickers">
+    <div class="wrap">
+      <div class="section-label">Universe</div>
+      <table class="ticker-table">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Sleeve</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="ticker-sym">SPY</td><td><span class="sleeve-tag core">Core</span></td><td>US Large Cap</td></tr>
+          <tr><td class="ticker-sym">EFA</td><td><span class="sleeve-tag core">Core</span></td><td>Intl Developed Equities</td></tr>
+          <tr><td class="ticker-sym">EEM</td><td><span class="sleeve-tag core">Core</span></td><td>EM Equities</td></tr>
+          <tr><td class="ticker-sym">IEF</td><td><span class="sleeve-tag core">Core</span></td><td>US Treasuries 7–10Y</td></tr>
+          <tr><td class="ticker-sym">SCHP</td><td><span class="sleeve-tag core">Core</span></td><td>US TIPS</td></tr>
+          <tr><td class="ticker-sym">HYG</td><td><span class="sleeve-tag core">Core</span></td><td>US High Yield Credit</td></tr>
+          <tr><td class="ticker-sym">QMOM</td><td><span class="sleeve-tag factor">Factor</span></td><td>US Momentum</td></tr>
+          <tr><td class="ticker-sym">QUAL</td><td><span class="sleeve-tag factor">Factor</span></td><td>US Quality</td></tr>
+          <tr><td class="ticker-sym">QMIX</td><td><span class="sleeve-tag factor">Factor</span></td><td>AQR Multi-Style</td></tr>
+          <tr><td class="ticker-sym">KMLM</td><td><span class="sleeve-tag factor">Factor</span></td><td>Trend Following (Mount Lucas)</td></tr>
+          <tr><td class="ticker-sym">DBMF</td><td><span class="sleeve-tag factor">Factor</span></td><td>Managed Futures (SG Index)</td></tr>
+          <tr><td class="ticker-sym">DBV</td><td><span class="sleeve-tag carry">Carry</span></td><td>FX Carry G10</td></tr>
+          <tr><td class="ticker-sym">PDBC</td><td><span class="sleeve-tag carry">Carry</span></td><td>Commodity Roll Yield</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="signals">
+    <div class="wrap">
+      <div class="section-label">Signal Logic</div>
+      <div class="signals">
+        <div class="signal-card">
+          <div class="signal-name">Trend</div>
+          <div class="signal-freq">Weekly</div>
+          <div class="signal-method">12-1 month momentum z-score across SPY, EFA, EEM, QMOM, KMLM, DBMF.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-name">Carry</div>
+          <div class="signal-freq">Monthly</div>
+          <div class="signal-method">ETF vs benchmark return differential on DBV, PDBC, and HYG.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-name">Regime</div>
+          <div class="signal-freq">Weekly</div>
+          <div class="signal-method">VIX 20-day smoothed threshold applied across the full universe.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="setup">
+    <div class="wrap">
+      <div class="section-label">Quick Start</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <div class="step-title">Create virtual environment</div>
+            <div class="step-cmd">python -m venv venv &amp;&amp; source venv/bin/activate</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <div class="step-title">Install dependencies</div>
+            <div class="step-cmd">pip install -r requirements.txt</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <div class="step-title">Initialise database (downloads 3yr price history)</div>
+            <div class="step-cmd">python -m data.fetcher</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <div class="step-title">Run weekly signal job</div>
+            <div class="step-cmd">python -m jobs.weekly --portfolio-value 100000</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-body">
+            <div class="step-title">Launch dashboard</div>
+            <div class="step-cmd">streamlit run monitor/dashboard.py</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-label">Roadmap</div>
+      <div class="next-items">
+        <div class="next-item">Alpaca paper trading connection (broker/alpaca.py)</div>
+        <div class="next-item">Monthly job: carry + value spread signals</div>
+        <div class="next-item">Quarterly job: full re-optimisation with rolling covariance estimate</div>
+        <div class="next-item">Backtesting engine</div>
+        <div class="next-item">Email / Telegram alerts</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-text">Portfolio System &mdash; <span>AQR 2026 CMA</span></div>
+    <div class="footer-text">Updated annually each <span>January</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
